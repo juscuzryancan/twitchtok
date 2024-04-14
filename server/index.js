@@ -2,11 +2,13 @@ import express from "express";
 import axios from "axios";
 import dotenv from "dotenv";
 import morgan from "morgan";
+import cors from "cors";
 dotenv.config();
 const { CLIENT_ID, CLIENT_SECRET } = process.env;
 
 const app = express();
 
+app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 
@@ -31,25 +33,11 @@ app.use(async (req, res, next) => {
 });
 
 app.get("/get-clips", async (req, res, next) => {
-  console.log("accessToken", req.accessToken);
   try {
-    // const { data } = await axios.get(
-    //   "https://api.twitch.tv/helix/search/channels",
-    //   {
-    //     params: {
-    //       query: "xqc",
-    //     },
-    //     headers: {
-    //       Authorization: `Bearer ${req.accessToken}`,
-    //       "Client-Id": CLIENT_ID,
-    //     },
-    //   },
-    // );
-
     const { data } = await axios.get("https://api.twitch.tv/helix/clips", {
       params: {
         broadcaster_id: "71092938",
-        started_at: "2022-07-03T00:00:00Z",
+        started_at: "2023-07-03T00:00:00Z",
       },
       headers: {
         Authorization: `Bearer ${req.accessToken}`,
@@ -70,4 +58,3 @@ const { PORT = 8080 } = process.env;
 app.listen(PORT, () => {
   console.log(`listening on PORT:${PORT}`);
 });
-
